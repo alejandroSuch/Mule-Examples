@@ -10,17 +10,19 @@
 		http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
 	">
 
-    <http:listener-config name="HTTP_Listener_Configuration" host="127.0.0.1" port="8081"/>
-    <flow name="test_flow">
-        <http:listener config-ref="HTTP_Listener_Configuration" path="/"/>
-        <set-payload value="Hello Mule"/>
-        <logger level="WARN" />
-    </flow>
-
-
-    <flow name="main">
+    <flow name="main.1">
         <vm:inbound-endpoint path="in"/>
         <set-payload value="Hello, #[payload]!"/>
+        <set-variable variableName="aVariable" value="13" />
+        <set-property propertyName="firstOutboundProperty" value="1" />
+        <set-session-variable variableName="sessionVar" value="sess" />
+        <vm:outbound-endpoint path="second"/>
+    </flow>
+
+    <flow name="main.2">
+        <vm:inbound-endpoint path="second"/>
+        <set-variable variableName="anotherVariable" value="13" />
+        <set-property propertyName="secondOutboundProperty" value="2" />
         <vm:outbound-endpoint path="out"/>
     </flow>
 </mule>
