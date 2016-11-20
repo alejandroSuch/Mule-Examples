@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+
+      xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+		http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+	">
+	<http:listener-config name="HTTP_Listener_Configuration" host="127.0.0.1" port="8081"/>
+	<flow name="test_flow">
+		<http:listener config-ref="HTTP_Listener_Configuration" path="/kk"/>
+
+		<logger level="WARN" />
+	</flow>
+
+	<flow name="main.flow">
+		<vm:inbound-endpoint path="in"/>
+		<set-payload value="#[app.registry.dummyService.sayHello()]"/>
+		<vm:outbound-endpoint path="out"/>
+	</flow>
+</mule>
