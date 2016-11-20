@@ -44,15 +44,7 @@ public class SpringAnnotationConfigurationBuilder extends AutoConfigurationBuild
 
     if (basePackage != null) {
       final AnnotationConfigApplicationContext ctx = createApplicationContext(basePackage);
-      final SpringRegistry springRegistry = new SpringRegistry(ctx, muleContext);
-
-      muleContext.addRegistry(springRegistry);
-
-      try {
-        springRegistry.initialise();
-      } catch (InitialisationException e) {
-        throw new ConfigurationException(e);
-      }
+      createSpringRegistry(muleContext, ctx);
     }
 
     super.doConfigure(muleContext);
@@ -85,5 +77,17 @@ public class SpringAnnotationConfigurationBuilder extends AutoConfigurationBuild
     }
 
     return ctx;
+  }
+
+  private void createSpringRegistry(MuleContext muleContext, AnnotationConfigApplicationContext ctx) throws ConfigurationException {
+    final SpringRegistry springRegistry = new SpringRegistry(ctx, muleContext);
+
+    muleContext.addRegistry(springRegistry);
+
+    try {
+      springRegistry.initialise();
+    } catch (InitialisationException e) {
+      throw new ConfigurationException(e);
+    }
   }
 }
