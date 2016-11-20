@@ -17,6 +17,7 @@
         <jdk.version>1.8</jdk.version>
         <junit.version>4.9</junit.version>
         <default.scope>provided</default.scope>
+        <builder.class>org.mule.config.builders.AutoConfigurationBuilder</builder.class>
     </properties>
 
     <modules>
@@ -122,6 +123,8 @@
                                 <argument>-debug</argument>
                                 <argument>-config</argument>
                                 <argument>${basedir}/src/main/app/mule-config.xml</argument>
+                                <argument>-builder</argument>
+                                <argument>${builder.class}</argument>
                                 <argument>-Xmx2048m</argument>
                                 <argument>-XX:+UseConcMarkSweepGC</argument>
                                 <argument>-XX:+UseParNewGC</argument>
@@ -130,6 +133,7 @@
                                 <argument>-XX:PermSize=256m</argument>
                                 <argument>-XX:MaxPermSize=512m</argument>
                             </arguments>
+                            <classpathScope>compile</classpathScope>
                             <!-- <classpathScope>test</classpathScope> -->
                             <systemProperties>
                                 <systemProperty>
