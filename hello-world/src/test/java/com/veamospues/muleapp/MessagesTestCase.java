@@ -49,16 +49,23 @@ public class MessagesTestCase extends FunctionalTestCase {
 
   @Test
   public void testFlowIsStopped() throws Exception{
-    ((Flow)muleContext.getRegistry().lookupObject("main.1")).stop();
-    ((Flow)muleContext.getRegistry().lookupObject("main.2")).stop();
+    final Flow firstFlow = (Flow) muleContext.getRegistry().lookupObject("main.1");
+
+    firstFlow.stop();
 
     final MuleClient client = muleContext.getClient();
     final MuleMessage message = new DefaultMuleMessage("world", muleContext);
 
     client.dispatch("vm://in", message);
 
-    final MuleMessage resultMessage = client.request("vm://out", RECEIVE_TIMEOUT);
-
+    //FIRST FLOW IS STOPPED, SO NO RESULT SHOULD BE OBTAINED
+    MuleMessage resultMessage = client.request("vm://out", RECEIVE_TIMEOUT);
     assertNull(resultMessage);
+
+    firstFlow.start();
+
+    //AFTER RESTARTING FIRST FLOW WE OBTAIN RESULTS
+    resultMessage = client.request("vm://out", RECEIVE_TIMEOUT);
+    assertEquals("Hello, world!", resultMessage.getPayloadAsString());
   }
 }
