@@ -68,7 +68,7 @@ public class SpringAnnotationConfigurationBuilder extends AutoConfigurationBuild
 
   private AnnotationConfigApplicationContext createApplicationContext(String basePackage) {
     final AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
-    final Reflections reflections = new Reflections("com.veamospues");
+    final Reflections reflections = new Reflections(basePackage);
     final Set<Class<?>> configurationClasses = reflections.getTypesAnnotatedWith(Configuration.class);
     final Iterator<Class<?>> it = configurationClasses.iterator();
 
