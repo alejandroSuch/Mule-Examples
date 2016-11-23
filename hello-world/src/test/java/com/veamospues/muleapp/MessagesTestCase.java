@@ -8,6 +8,7 @@ import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
 import org.mule.api.transport.PropertyScope;
+import org.mule.construct.Flow;
 import org.mule.tck.junit4.FunctionalTestCase;
 
 import static org.junit.Assert.assertEquals;
@@ -44,5 +45,20 @@ public class MessagesTestCase extends FunctionalTestCase {
     assertNull(resultMessage.getInboundProperty("firstOutboundProperty"));
 
     assertEquals("Hello, world!", resultMessage.getPayloadAsString());
+  }
+
+  @Test
+  public void testFlowIsStopped() throws Exception{
+    ((Flow)muleContext.getRegistry().lookupObject("main.1")).stop();
+    ((Flow)muleContext.getRegistry().lookupObject("main.2")).stop();
+
+    final MuleClient client = muleContext.getClient();
+    final MuleMessage message = new DefaultMuleMessage("world", muleContext);
+
+    client.dispatch("vm://in", message);
+
+    final MuleMessage resultMessage = client.request("vm://out", RECEIVE_TIMEOUT);
+
+    assertNull(resultMessage);
   }
 }
